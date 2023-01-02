@@ -1,11 +1,8 @@
 import time
 import matplotlib.pyplot as plt
-import random
 
 
 def initialize_graph(g, N, seed=42):
-    # random.seed(seed)  # comment this line to get a random graph
-
     for i in range(N):
         x = i % 2
         y = i // 2
@@ -15,10 +12,6 @@ def initialize_graph(g, N, seed=42):
         for j in range(i + 1, N):
             if abs(i - j) <= 3 and i != j:
                 g.add_edge(i, j, i + j)
-
-            # if len(g.get_neighbors(i)) < 4 and len(g.get_neighbors(j)) < 4:
-            #     if i != j:
-            #         g.add_edge(i, j, i + j)
     print("ok")
     return g
 

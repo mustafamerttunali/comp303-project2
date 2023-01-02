@@ -17,9 +17,7 @@ parser.add_argument("--compare", action="store_true", help="compare the results"
 args = parser.parse_args()
 
 
-print(
-    f"Welcome to the COMP 303, Project 2 Assignment!\nThe program initializes a graph with random edges and weights.\nIf target node is not reachable from source node, the program will print 'No path found!'.\n"
-)
+print(f"Welcome to the COMP 303, Project 2 Assignment!")
 
 N = int(input("Enter the number of nodes: "))
 
@@ -37,7 +35,7 @@ g = initialize_graph(Graph(), N)
 if args.compare:
     print("Comparing the results of the algorithms...")
     source = 1
-    target = N - 1  # TODO: IS THAT CORRECT? Hoca says N but...
+    target = N - 1
     results = compare_algorithms(g, source, target)
     # results = g.compare_algorithms(source, target)
     # for algo_type, result in results.items():
@@ -61,7 +59,7 @@ while True:
             g.get_edges(),
             source,
             target,
-            shortest_path_algorithms[algorithm],
+            "dijkstra" if algorithm == 0 else "a_star",
         )
 
         shortest_path, distance = shortest_path_algorithms[algorithm](source, target)
