@@ -61,15 +61,18 @@ class Graph(MinHeap):
         self.heap = []
         self.push((0, source))  # (distance, node)
 
+        counter = 0
+
         while self.heap:
             distance, node = self.pop()
+            counter += 1
 
             if node == target:
                 path = [target]
                 while path[-1] != source:
                     path.append(self.dijkstra_parents[path[-1]])
                 path.reverse()
-                return path, distance
+                return path, distance, counter
 
             for neighbor, weight in self.graph[node]:
                 new_distance = distance + weight
@@ -77,7 +80,7 @@ class Graph(MinHeap):
                     distances[neighbor] = new_distance
                     self.dijkstra_parents[neighbor] = node
                     self.push((new_distance, neighbor))
-        return [], float("inf")
+        return [], float("inf"), counter
 
     # def h_func(self, node: int, target: int) -> int:
     #     """This heuristic function is similar to the Manhattan distance,
@@ -151,6 +154,7 @@ class Graph(MinHeap):
         open_set = set([source])
         closed_set = set()
 
+        closed_set_counter = 0
         while open_set:
             node = min(
                 open_set, key=lambda x: distances[x] + self.h_func(x, target)
@@ -161,10 +165,11 @@ class Graph(MinHeap):
                 while path[-1] != source:
                     path.append(self.a_star_parents[path[-1]])
                 path.reverse()
-                return path, distances[target]
+                return path, distances[target], closed_set_counter
 
             open_set.remove(node)
             closed_set.add(node)
+            closed_set_counter += 1
 
             for neighbor, weight in self.graph[node]:
                 if neighbor in closed_set:
@@ -176,14 +181,14 @@ class Graph(MinHeap):
                     self.a_star_parents[neighbor] = node
                     open_set.add(neighbor)
 
-        return [], float("inf")
+        return [], float("inf"), closed_set_counter
 
     def __str__(self):
         return str(self.graph)
 
 
 if __name__ == "__main__":
-
+    # TESTING USAGE ONLY!!!
     g = Graph()
 
     # 4 nodes, 5 edges

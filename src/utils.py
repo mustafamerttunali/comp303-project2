@@ -12,7 +12,6 @@ def initialize_graph(g, N, seed=42):
         for j in range(i + 1, N):
             if abs(i - j) <= 3 and i != j:
                 g.add_edge(i, j, i + j)
-    print("ok")
     return g
 
 
@@ -58,7 +57,7 @@ def visualize_graph(g, nodes, edges):
 
 def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
-    distance = (
+    distance, _, _ = (
         g.dijkstra(source, target)
         if algorithm == "dijkstra"
         else g.a_star(source, target)
@@ -129,22 +128,35 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
 
 def compare_algorithms(g, source, target):
-    # TODO: BUG Fix
-
     # time complexity of dijkstra
-    start = time.time()
-    dijkstra_path, dijkstra_distance = g.dijkstra(source, target)
-    dijkstra_time = time.time() - start
+    start = time.perf_counter()
+    dijkstra_path, dijkstra_distance, djakstra_counter = g.dijkstra(source, target)
+    dijkstra_time = time.perf_counter() - start
 
     # time complexity of a*
-    start = time.time()
-    a_star_path, a_star_distance = g.a_star(source, target)
-    a_star_time = time.time() - start
+    start = time.perf_counter()
+    a_star_path, a_star_distance, a_star_counter = g.a_star(source, target)
+    a_star_time = time.perf_counter() - start
 
-    print(
-        f" First 10 path of Dijkstra vs A*: {dijkstra_path[:10]} with distance of {dijkstra_distance} vs {a_star_path[:10]} with distance of {a_star_distance}"
-    )
+    results = {
+        "dijkstra": {
+            "path": dijkstra_path,
+            "distance": dijkstra_distance,
+            "time": dijkstra_time,
+            "counter": djakstra_counter,
+        },
+        "a_star": {
+            "path": a_star_path,
+            "distance": a_star_distance,
+            "time": a_star_time,
+            "counter": a_star_counter,
+        },
+    }
 
-    print(f"Dijkstra vs A* Time: {dijkstra_time} vs {a_star_time}")
+    return results
 
-    return dijkstra_time, a_star_time
+    # print(
+    #     f"First 5 path of Dijkstra vs A*: {dijkstra_path[:5]} with distance of {dijkstra_distance} vs {a_star_path[:5]} with distance of {a_star_distance}"
+    # )
+
+    # print(f"Dijkstra vs A* Time: {dijkstra_time} vs {a_star_time}")
