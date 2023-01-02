@@ -2,7 +2,12 @@ import random
 import argparse
 
 from graph import Graph
-from utils import initialize_graph, visualize_graph, visualize_shortest_path
+from utils import (
+    initialize_graph,
+    visualize_graph,
+    visualize_shortest_path,
+    compare_algorithms,
+)
 
 
 parser = argparse.ArgumentParser()
@@ -30,8 +35,10 @@ print(f"Graph is creating with {N} nodes...", end="")
 g = initialize_graph(Graph(), N)
 
 if args.compare:
+    print("Comparing the results of the algorithms...")
     source = 1
-    target = N
+    target = N - 1  # TODO: IS THAT CORRECT? Hoca says N but...
+    results = compare_algorithms(g, source, target)
     # results = g.compare_algorithms(source, target)
     # for algo_type, result in results.items():
     #     print(
@@ -39,22 +46,23 @@ if args.compare:
     #     )
     exit(1)
 
-# visualize_graph(g, g.get_nodes(), g.get_edges())
 
+visualize_graph(g, g.get_nodes(), g.get_edges())
 shortest_path_algorithms = {0: g.dijkstra, 1: g.a_star}
 while True:
-    algorithm = int(
-        input(
-            "Select the algorithm [0 for djkstra, 1 for A*, ] or compare the algorihms (2): "
-        )
-    )
+    algorithm = int(input("Select the algorithm [0 for djkstra, 1 for A*, ]: "))
     try:
         source, target = int(input("Enter the source node: ")), int(
             input("Enter the target node: ")
         )
-        # visualize_shortest_path(
-        #     g, g.get_nodes(), g.get_edges(), source, target, algorithms[algorithm]
-        # )
+        visualize_shortest_path(
+            g,
+            g.get_nodes(),
+            g.get_edges(),
+            source,
+            target,
+            shortest_path_algorithms[algorithm],
+        )
 
         shortest_path, distance = shortest_path_algorithms[algorithm](source, target)
         print(
@@ -62,12 +70,8 @@ while True:
         )
 
         # TODO: Running time
-
         # TODO: Total number of repetitions
-        # print(f"Total number of repetitions: {g.repetitions}")
-
-        # Theoretical running time of the algorithm
-        print(f"Theoretical running time of the algorithm: O(n^2)")
+        # TODO: Theoretical running time of the algorithm
 
         break
     except KeyError:

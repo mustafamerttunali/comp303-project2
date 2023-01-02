@@ -1,3 +1,4 @@
+import time
 import matplotlib.pyplot as plt
 import random
 
@@ -11,14 +12,13 @@ def initialize_graph(g, N, seed=42):
         g.add_node(i, y, x)
 
     for i in range(N):
-        # edges 0 to 1, 1 to 2, 2 to 3, 3 to 4, 4 to 5, 5 to 6, 6 to 7, 7 to 8
         for j in range(i + 1, N):
-            if abs(i - j) > 3 and i == j:
-                continue
-
-            if len(g.get_neighbors(i)) < 3 and len(g.get_neighbors(j)) < 3:
+            if abs(i - j) <= 3 and i != j:
                 g.add_edge(i, j, i + j)
 
+            # if len(g.get_neighbors(i)) < 4 and len(g.get_neighbors(j)) < 4:
+            #     if i != j:
+            #         g.add_edge(i, j, i + j)
     print("ok")
     return g
 
@@ -26,7 +26,7 @@ def initialize_graph(g, N, seed=42):
 def visualize_graph(g, nodes, edges):
     node_xs, node_ys = zip(*[g.get_node_coordinates(node) for node in nodes])
 
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(8, 4))
     plt.axis("off")
     plt.scatter(node_xs, node_ys, s=600, c="white", edgecolors="black", lw=3)
 
@@ -73,7 +73,7 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
     parents = g.dijkstra_parents if algorithm == "dijkstra" else g.a_star_parents
 
-    plt.figure(figsize=(16, 8))
+    plt.figure(figsize=(8, 4))
     plt.axis("off")
 
     for node in nodes:
@@ -95,15 +95,15 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
         if edge[0] in path and edge[1] in path:  # edge is part of the shortest path
             plt.plot([x1, x2], [y1, y2], "g-")
-            plt.text(
-                (x1 + x2) / 2,
-                (y1 + y2 / 2),
-                f"{edge_weight_str}",
-                ha="center",
-                va="center",
-                fontsize=14,
-                c="g",
-            )
+            # plt.text(
+            #     (x1 + x2) / 2,
+            #     (y1 + y2 / 2),
+            #     f"{edge_weight_str}",
+            #     ha="center",
+            #     va="center",
+            #     fontsize=18,
+            #     c="g",
+            # )
         else:  # edge is not part of the shortest path
 
             plt.annotate(
@@ -133,3 +133,22 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
     plt.scatter(node_xs, node_ys, s=600, c="white", edgecolors="black", marker="o")
 
     plt.show()
+
+
+def compare_algorithms(g, source, target):
+    # TODO: BUG Fix
+    start = time.time()
+    dijkstra_path, dijkstra_distance = g.dijkstra(source, target)
+    dijkstra_time = time.time() - start
+
+    start = time.time()
+    a_star_path, a_star_distance = g.a_star(source, target)
+    a_star_time = time.time() - start
+
+    print(
+        f" First 10 path of Dijkstra vs A*: {dijkstra_path[:10]} with distance of {dijkstra_distance} vs {a_star_path[:10]} with distance of {a_star_distance}"
+    )
+
+    print(f"Dijkstra vs A* Time: {dijkstra_time} vs {a_star_time}")
+
+    return dijkstra_time, a_star_time
