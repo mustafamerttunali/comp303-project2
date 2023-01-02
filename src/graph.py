@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 from min_heap import MinHeap
 from typing import Dict, List, Tuple
-
+from math import sqrt
 from utils import visualize_graph, visualize_shortest_path
 
 
@@ -111,6 +111,23 @@ class Graph(MinHeap):
     #     node_x, node_y = self.get_node_coordinates(node)
     #     target_x, target_y = self.get_node_coordinates(target)
     #     return abs(node_x - target_x) + abs(node_y - target_y)
+
+    # def h_func(self, node: int, target: int) -> float:
+    #     """Calculate the Euclidean distance between two nodes.
+
+    #     Args:
+    #         node (int): The first node.
+    #         target (int): The second node.
+
+    #     Returns:
+    #         float: The Euclidean distance between the two nodes.
+    #     """
+    #     node_x, node_y = self.get_node_coordinates(node)
+    #     target_x, target_y = self.get_node_coordinates(target)
+    #     dx = node_x - target_x
+    #     dy = node_y - target_y
+    #     return sqrt(dx**2 + dy**2)
+
     def h_func(self, node: int, target: int) -> int:
 
         """This heuristic function estimates the distance between

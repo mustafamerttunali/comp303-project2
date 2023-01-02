@@ -130,10 +130,13 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
 def compare_algorithms(g, source, target):
     # TODO: BUG Fix
+
+    # time complexity of dijkstra
     start = time.time()
     dijkstra_path, dijkstra_distance = g.dijkstra(source, target)
     dijkstra_time = time.time() - start
 
+    # time complexity of a*
     start = time.time()
     a_star_path, a_star_distance = g.a_star(source, target)
     a_star_time = time.time() - start
