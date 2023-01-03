@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 from min_heap import MinHeap
 from typing import Dict, List, Tuple
 from math import sqrt
-from utils import visualize_graph, visualize_shortest_path
+
+# from utils import visualize_graph, visualize_shortest_path
 
 
 class Graph(MinHeap):
@@ -96,7 +97,6 @@ class Graph(MinHeap):
         return metrics
 
     def h_func(self, node: int, target: int) -> int:
-
         """This heuristic function estimates the distance between
         the two nodes by taking the absolute value of the difference
         between their indices.
@@ -118,7 +118,9 @@ class Graph(MinHeap):
         open_set = set([source])
         closed_set = set()
 
-        closed_set_counter = 0
+        metrics = {"visited": 0, "repetition": 0, "path": [], "distance": 0}
+        repetition = 0
+        visited = 0
         while open_set:
             node = min(
                 open_set, key=lambda x: distances[x] + self.h_func(x, target)
@@ -129,11 +131,14 @@ class Graph(MinHeap):
                 while path[-1] != source:
                     path.append(self.a_star_parents[path[-1]])
                 path.reverse()
-                return path, distances[target], closed_set_counter
+                metrics["repetition"] = repetition
+                metrics["visited"] = len(path)
+                metrics["path"] = path
+                metrics["distance"] = distances[target]
+                return metrics
 
             open_set.remove(node)
             closed_set.add(node)
-            closed_set_counter += 1
 
             for neighbor, weight in self.graph[node]:
                 if neighbor in closed_set:
@@ -141,11 +146,11 @@ class Graph(MinHeap):
                 new_distance = distances[node] + weight
 
                 if new_distance < distances[neighbor]:
+                    repetition += 1
                     distances[neighbor] = new_distance
                     self.a_star_parents[neighbor] = node
                     open_set.add(neighbor)
-
-        return [], float("inf"), closed_set_counter
+        return metrics
 
     def __str__(self):
         return str(self.graph)

@@ -3,6 +3,7 @@ import argparse
 import matplotlib.pyplot as plt
 
 from graph import Graph
+from copy import deepcopy
 from utils import (
     initialize_graph,
     visualize_graph,
@@ -36,22 +37,32 @@ else:
     print("Comparing the results of the algorithms...")
     source = 1
     a_star_times = []
-    a_star_counters = []
+    a_star_repetitions = []
     djikstra_times = []
-    djikstra_counters = []
+    djikstra_repetitions = []
     for N in N_s:
         print(f"Experiment is starting by creating Graph  with {N} nodes...")
-        g = initialize_graph(Graph(), N)
+
+        g1 = initialize_graph(Graph(), N)
+        g2 = deepcopy(g1)
+
         target = N
-        results = compare_algorithms(g, source, target)
+        results = compare_algorithms(g1, g2, source, target)
         djikstra_time, a_star_time = (
             results["dijkstra"]["time"],
             results["a_star"]["time"],
         )
+
         djikstra_times.append(djikstra_time)
-        djikstra_counters.append(results["dijkstra"]["visited"])
         a_star_times.append(a_star_time)
-        a_star_counters.append(results["a_star"]["counter"])
+
+        djikstra_repetition, a_star_repetition = (
+            results["dijkstra"]["repetition"],
+            results["a_star"]["repetition"],
+        )
+
+        djikstra_repetitions.append(djikstra_repetition)
+        a_star_repetitions.append(a_star_repetition)
 
     plt.title("Running time of Dijkstra and A* algorithms")
     plt.plot(N_s, djikstra_times, label="Dijkstra")
@@ -61,22 +72,15 @@ else:
     plt.legend()
     plt.show()
 
-    print("Dijkstra counters: ", djikstra_counters)
-    print("A* counters: ", a_star_counters)
+    print("Dijkstra Repetitions: ", djikstra_repetitions)
+    print("A* Repetitions: ", a_star_repetitions)
 
     # Djakstra counters
-    plt.title("Number of nodes visited by Dijkstra Algotihm")
-    plt.plot(N_s, djikstra_counters, label="Dijkstra counter")
+    plt.title("Repetitions by Dijkstra and A*")
+    plt.plot(N_s, djikstra_repetitions, label="Dijkstra repetitions")
+    plt.plot(N_s, a_star_repetitions, label="A* repetitions")
     plt.xlabel("Input size (number of nodes in the Graph")
-    plt.ylabel("Number of nodes visited")
-    plt.legend()
-    plt.show()
-
-    # A* counters
-    plt.title("Number of nodes visited by A* Algotihm")
-    plt.plot(N_s, a_star_counters, label="A* counter")
-    plt.xlabel("Input size (number of nodes in the Graph")
-    plt.ylabel("Number of nodes visited")
+    plt.ylabel("Number of Repetitions")
     plt.legend()
     plt.show()
 

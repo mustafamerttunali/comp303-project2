@@ -8,14 +8,10 @@ def initialize_graph(g, N):
         y = (i - 1) // 2
         g.add_node(i, y, x)
 
-    counter = 0
     for i in range(1, N + 1):
         for j in range(i, N + 1):
             if abs(i - j) <= 3 and i != j:
                 g.add_edge(i, j, i + j)
-                counter += 1
-
-    print(f"Number of edges: {counter * 2}")
     return g
 
 
@@ -105,7 +101,7 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
             plt.plot([x1, x2], [y1, y2], "g-", lw=3)
         else:  # edge is not part of the shortest path
-
+            pass
             plt.annotate(
                 "",
                 xy=(x2, y2),
@@ -117,15 +113,6 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
                     connectionstyle="arc3,rad=-0.1",
                     mutation_scale=20,
                 ),
-            )
-            plt.text(
-                (x1 + x2) / 2,
-                (y1 + y2) / 2,
-                f"{edge_weight_str}",
-                ha="center",
-                va="center",
-                fontsize=14,
-                c="black",
             )
 
         if len(start_node_position) == 2 and len(end_node_position) == 2:
@@ -150,33 +137,36 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
     plt.show()
 
 
-def compare_algorithms(g, source, target):
+def compare_algorithms(g1, g2, source, target):
+
     # time complexity of dijkstra
     start = time.perf_counter()
-    metrics = g.dijkstra(source, target)
+    metrics1 = g1.dijkstra(source, target)
     dijkstra_time = time.perf_counter() - start
 
     # time complexity of a*
     start = time.perf_counter()
-    a_star_path, a_star_distance, a_star_counter = g.a_star(source, target)
+    metrics2 = g2.a_star(source, target)
     a_star_time = time.perf_counter() - start
 
     results = {
         "dijkstra": {
-            "path": metrics["path"],
-            "distance": metrics["distance"],
+            "path": metrics1["path"],
+            "distance": metrics1["distance"],
             "time": dijkstra_time,
-            "visited": metrics["visited"],
-            "repetition": metrics["repetition"],
+            "visited": metrics1["visited"],
+            "repetition": metrics1["repetition"],
         },
         "a_star": {
-            "path": a_star_path,
-            "distance": a_star_distance,
+            "path": metrics2["path"],
+            "distance": metrics2["distance"],
             "time": a_star_time,
-            "counter": a_star_counter,
-            "repetition": "N/A",
+            "visited": metrics2["visited"],
+            "repetition": metrics2["repetition"],
         },
     }
+
+    print(results)
 
     return results
 
