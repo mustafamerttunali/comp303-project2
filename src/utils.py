@@ -2,16 +2,20 @@ import time
 import matplotlib.pyplot as plt
 
 
-def initialize_graph(g, N, seed=42):
-    for i in range(N):
-        x = i % 2
-        y = i // 2
+def initialize_graph(g, N):
+    for i in range(1, N + 1):
+        x = (i - 1) % 2
+        y = (i - 1) // 2
         g.add_node(i, y, x)
 
-    for i in range(N):
-        for j in range(i + 1, N):
+    counter = 0
+    for i in range(1, N + 1):
+        for j in range(i, N + 1):
             if abs(i - j) <= 3 and i != j:
                 g.add_edge(i, j, i + j)
+                counter += 1
+
+    print(f"Number of edges: {counter * 2}")
     return g
 
 
@@ -57,7 +61,7 @@ def visualize_graph(g, nodes, edges):
 
 def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
-    distance, _, _ = (
+    metrics = (
         g.dijkstra(source, target)
         if algorithm == "dijkstra"
         else g.a_star(source, target)
@@ -79,23 +83,27 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
         current = parents[current]
     path = path[::-1]
 
+    start_node_position = []
+    end_node_position = []
     for edge in edges:
         x1, y1 = g.get_node_coordinates(edge[0])
         x2, y2 = g.get_node_coordinates(edge[1])
 
         edge_weight_str = str(g.get_edge_weight(edge[0], edge[1]))
 
+        node_xs, node_ys = zip(*[g.get_node_coordinates(node) for node in nodes])
+
         if edge[0] in path and edge[1] in path:  # edge is part of the shortest path
-            plt.plot([x1, x2], [y1, y2], "g-")
-            # plt.text(
-            #     (x1 + x2) / 2,
-            #     (y1 + y2 / 2),
-            #     f"{edge_weight_str}",
-            #     ha="center",
-            #     va="center",
-            #     fontsize=18,
-            #     c="g",
-            # )
+
+            if edge[0] == metrics["path"][0]:
+                start_node_position = [x1, y1]
+
+            if edge[0] == metrics["path"][-1]:
+                end_node_position = [x1, y1]
+
+            print(edge[0], edge[1])
+
+            plt.plot([x1, x2], [y1, y2], "g-", lw=3)
         else:  # edge is not part of the shortest path
 
             plt.annotate(
@@ -120,17 +128,32 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
                 c="black",
             )
 
-    node_xs, node_ys = zip(*[g.get_node_coordinates(node) for node in nodes])
-
-    plt.scatter(node_xs, node_ys, s=600, c="white", edgecolors="black", marker="o")
-
+        if len(start_node_position) == 2 and len(end_node_position) == 2:
+            plt.scatter(
+                start_node_position[0],
+                start_node_position[1],
+                s=600,
+                c="red",
+                edgecolors="black",
+                marker="o",
+            )
+            plt.scatter(
+                end_node_position[0],
+                end_node_position[1],
+                s=600,
+                c="green",
+                edgecolors="black",
+                marker="o",
+            )
+        else:
+            plt.scatter(x1, y1, s=600, c="white", edgecolors="black", marker="o")
     plt.show()
 
 
 def compare_algorithms(g, source, target):
     # time complexity of dijkstra
     start = time.perf_counter()
-    dijkstra_path, dijkstra_distance, djakstra_counter = g.dijkstra(source, target)
+    metrics = g.dijkstra(source, target)
     dijkstra_time = time.perf_counter() - start
 
     # time complexity of a*
@@ -140,16 +163,18 @@ def compare_algorithms(g, source, target):
 
     results = {
         "dijkstra": {
-            "path": dijkstra_path,
-            "distance": dijkstra_distance,
+            "path": metrics["path"],
+            "distance": metrics["distance"],
             "time": dijkstra_time,
-            "counter": djakstra_counter,
+            "visited": metrics["visited"],
+            "repetition": metrics["repetition"],
         },
         "a_star": {
             "path": a_star_path,
             "distance": a_star_distance,
             "time": a_star_time,
             "counter": a_star_counter,
+            "repetition": "N/A",
         },
     }
 

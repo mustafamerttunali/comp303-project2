@@ -14,6 +14,7 @@ from utils import (
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--compare", action="store_true", help="compare the results")
+parser.add_argument("--viz", action="store_true", help="visualize the graph")
 
 args = parser.parse_args()
 
@@ -22,9 +23,9 @@ print(f"Welcome to the COMP 303, Project 2 Assignment!")
 
 if not args.compare:
     N = int(input("Enter the number of nodes: "))
-    if N < 2 or N > 20:
+    if N < 2:
         print(
-            "Number of nodes must be between 2 and 20. For higher N, python main.py --compare=True"
+            "Number of nodes must be between 2 and 20. For higher N, python main.py --compare"
         )
         exit(1)
 
@@ -41,14 +42,14 @@ else:
     for N in N_s:
         print(f"Experiment is starting by creating Graph  with {N} nodes...")
         g = initialize_graph(Graph(), N)
-        target = N - 1
+        target = N
         results = compare_algorithms(g, source, target)
         djikstra_time, a_star_time = (
             results["dijkstra"]["time"],
             results["a_star"]["time"],
         )
         djikstra_times.append(djikstra_time)
-        djikstra_counters.append(results["dijkstra"]["counter"])
+        djikstra_counters.append(results["dijkstra"]["visited"])
         a_star_times.append(a_star_time)
         a_star_counters.append(results["a_star"]["counter"])
 
@@ -82,14 +83,16 @@ else:
     exit(1)
 
 
-visualize_graph(g, g.get_nodes(), g.get_edges())
+# visualize_graph(g, g.get_nodes(), g.get_edges()) if args.viz else None
 shortest_path_algorithms = {0: g.dijkstra, 1: g.a_star}
 while True:
     algorithm = int(input("Select the algorithm [0 for djkstra, 1 for A*, ]: "))
     try:
-        source, target = int(input("Enter the source node: ")), int(
-            input("Enter the target node: ")
+        source, target = (
+            int(input("Enter the source node: ")),
+            int(input("Enter the target node: ")),
         )
+
         visualize_shortest_path(
             g,
             g.get_nodes(),
@@ -97,13 +100,12 @@ while True:
             source,
             target,
             "dijkstra" if algorithm == 0 else "a_star",
-        )
+        ) if args.viz else None
 
-        shortest_path, distance, counter = shortest_path_algorithms[algorithm](
-            source, target
-        )
+        metrics = shortest_path_algorithms[algorithm](source, target)
+        # print(f"Visited {counter} nodes")
         print(
-            f"Shortest path from {source} to {target} is {shortest_path} with distance {distance} and {counter} nodes visited."
+            f"Shortest path from {source} to {target} is {metrics['path']} with distance {metrics['distance']} and {metrics['visited']} nodes visited with {metrics['repetition']} repetition."
         )
         break
     except KeyError:

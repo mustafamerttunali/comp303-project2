@@ -1,6 +1,7 @@
 class MinHeap:
     def __init__(self):
         self.heap = []
+        self.counter = 0
 
     def push(self, val):
         """_summary_
@@ -19,7 +20,6 @@ class MinHeap:
         """
         self._swap(0, len(self.heap) - 1)
         val = self.heap.pop()
-
         self._bubble_down(0)
 
         return val
@@ -32,6 +32,8 @@ class MinHeap:
         """
         if index == 0:
             return
+
+        self.counter += 1
 
         parent_index = (index - 1) // 2
 
@@ -62,6 +64,19 @@ class MinHeap:
         if self.heap[index] > self.heap[min_index]:
             self._swap(index, min_index)
             self._bubble_down(min_index)
+
+    def decrease_key(self, node, new_distance):
+        """_summary_
+
+        Args:
+            node (_type_): _description_
+            new_distance (_type_): _description_
+        """
+        for i, (distance, node_) in enumerate(self.heap):
+            if node_ == node:
+                self.heap[i] = (new_distance, node_)
+                self._bubble_up(i)
+                break
 
     def _swap(self, index1, index2):
         self.heap[index1], self.heap[index2] = self.heap[index2], self.heap[index1]

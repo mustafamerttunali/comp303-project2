@@ -8,6 +8,7 @@ from utils import visualize_graph, visualize_shortest_path
 
 class Graph(MinHeap):
     def __init__(self):
+        super().__init__()
         self.graph = {}
         self.node_coordinates = {}
         self.a_star_parents = {}
@@ -61,75 +62,38 @@ class Graph(MinHeap):
         self.heap = []
         self.push((0, source))  # (distance, node)
 
-        counter = 0
+        metrics = {"visited": 0, "repetition": 0, "path": [], "distance": 0}
 
+        for node in self.graph.keys():
+            if node != source:
+                self.push((float("inf"), node))
+
+        visited = 0
         while self.heap:
             distance, node = self.pop()
-            counter += 1
-
             if node == target:
                 path = [target]
+                visited += 1
                 while path[-1] != source:
+                    visited += 1
                     path.append(self.dijkstra_parents[path[-1]])
                 path.reverse()
-                return path, distance, counter
+                metrics["visited"] = visited
+                metrics["repetition"] = self.counter
+                metrics["path"] = path
+                metrics["distance"] = distance
+                return metrics
 
             for neighbor, weight in self.graph[node]:
+                # TODO: Counter?
                 new_distance = distance + weight
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
                     self.dijkstra_parents[neighbor] = node
-                    self.push((new_distance, neighbor))
-        return [], float("inf"), counter
+                    # self.push((new_distance, neighbor))
+                    self.decrease_key(neighbor, new_distance)
 
-    # def h_func(self, node: int, target: int) -> int:
-    #     """This heuristic function is similar to the Manhattan distance,
-    #     but it allows for diagonal movement between nodes.
-
-    #     Args:
-    #         node (int): TODO
-    #         target (int): TODO
-
-    #     Returns:
-    #         int: TODO
-    #     """
-    #     node_x, node_y = self.get_node_coordinates(node)
-    #     target_x, target_y = self.get_node_coordinates(target)
-    #     dx = abs(node_x - target_x)
-    #     dy = abs(node_y - target_y)
-    #     return max(dx, dy) + (np.sqrt(2) - 1) * min(dx, dy)
-
-    # def h_func(self, node: int, target: int) -> int:
-    #     """Manhattan distance: This heuristic function calculates
-    #     the distance between two nodes as the sum of the absolute
-    #     differences of their coordinates.
-
-    #     Args:
-    #         node (int): TODO
-    #         target (int): TODO
-
-    #     Returns:
-    #         int: TODO
-    #     """
-    #     node_x, node_y = self.get_node_coordinates(node)
-    #     target_x, target_y = self.get_node_coordinates(target)
-    #     return abs(node_x - target_x) + abs(node_y - target_y)
-
-    # def h_func(self, node: int, target: int) -> float:
-    #     """Calculate the Euclidean distance between two nodes.
-
-    #     Args:
-    #         node (int): The first node.
-    #         target (int): The second node.
-
-    #     Returns:
-    #         float: The Euclidean distance between the two nodes.
-    #     """
-    #     node_x, node_y = self.get_node_coordinates(node)
-    #     target_x, target_y = self.get_node_coordinates(target)
-    #     dx = node_x - target_x
-    #     dy = node_y - target_y
-    #     return sqrt(dx**2 + dy**2)
+        return metrics
 
     def h_func(self, node: int, target: int) -> int:
 
@@ -218,3 +182,53 @@ if __name__ == "__main__":
 
     # visualize_graph(g, nodes, edges)
     visualize_shortest_path(g, nodes, edges, 1, 4, "dijkstra")
+
+
+# def h_func(self, node: int, target: int) -> int:
+#     """This heuristic function is similar to the Manhattan distance,
+#     but it allows for diagonal movement between nodes.
+
+#     Args:
+#         node (int): TODO
+#         target (int): TODO
+
+#     Returns:
+#         int: TODO
+#     """
+#     node_x, node_y = self.get_node_coordinates(node)
+#     target_x, target_y = self.get_node_coordinates(target)
+#     dx = abs(node_x - target_x)
+#     dy = abs(node_y - target_y)
+#     return max(dx, dy) + (np.sqrt(2) - 1) * min(dx, dy)
+
+# def h_func(self, node: int, target: int) -> int:
+#     """Manhattan distance: This heuristic function calculates
+#     the distance between two nodes as the sum of the absolute
+#     differences of their coordinates.
+
+#     Args:
+#         node (int): TODO
+#         target (int): TODO
+
+#     Returns:
+#         int: TODO
+#     """
+#     node_x, node_y = self.get_node_coordinates(node)
+#     target_x, target_y = self.get_node_coordinates(target)
+#     return abs(node_x - target_x) + abs(node_y - target_y)
+
+# def h_func(self, node: int, target: int) -> float:
+#     """Calculate the Euclidean distance between two nodes.
+
+#     Args:
+#         node (int): The first node.
+#         target (int): The second node.
+
+#     Returns:
+#         float: The Euclidean distance between the two nodes.
+#     """
+#     node_x, node_y = self.get_node_coordinates(node)
+#     target_x, target_y = self.get_node_coordinates(target)
+#     dx = node_x - target_x
+#     dy = node_y - target_y
+#     return sqrt(dx**2 + dy**2)
