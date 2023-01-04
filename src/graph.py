@@ -83,6 +83,7 @@ class Graph(MinHeap):
                 metrics["repetition"] = self.counter
                 metrics["path"] = path
                 metrics["distance"] = distance
+                metrics["predecessor"] = self.dijkstra_parents
                 return metrics
 
             for neighbor, weight in self.graph[node]:
@@ -135,6 +136,7 @@ class Graph(MinHeap):
                 metrics["visited"] = len(path)
                 metrics["path"] = path
                 metrics["distance"] = distances[target]
+                metrics["predecessor"] = self.a_star_parents
                 return metrics
 
             open_set.remove(node)
