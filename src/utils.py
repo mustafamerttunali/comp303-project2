@@ -165,9 +165,7 @@ def compare_algorithms(g1, g2, source, target):
             "repetition": metrics2["repetition"],
         },
     }
-
-    print(results)
-
+    print("ok")
     return results
 
     # print(

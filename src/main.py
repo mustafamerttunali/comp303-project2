@@ -43,7 +43,7 @@ else:
     djikstra_repetitions = []
     dijkstra_total_cost = []
     for N in N_s:
-        print(f"Experiment is starting by creating Graph  with {N} nodes...")
+        print(f"Experiment is starting by creating Graph  with {N} nodes...", end="")
 
         g1 = initialize_graph(Graph(), N)
         g2 = deepcopy(g1)
@@ -70,7 +70,6 @@ else:
         a_star_total_cost.append(results["a_star"]["distance"])
 
     plt.title("Running time of Dijkstra and A* algorithms")
-    plt.yscale("log")
     plt.plot(N_s, djikstra_times, label="Dijkstra")
     plt.plot(N_s, a_star_times, label="A*")
     plt.xlabel("Input size (number of nodes in the Graph")
@@ -78,12 +77,8 @@ else:
     plt.legend()
     plt.show()
 
-    print("Dijkstra Repetitions: ", djikstra_repetitions)
-    print("A* Repetitions: ", a_star_repetitions)
-
     # Djakstra counters
     plt.title("Repetitions by Dijkstra and A*")
-    plt.yscale("log")
     plt.plot(N_s, djikstra_repetitions, label="Dijkstra repetitions")
     plt.plot(N_s, a_star_repetitions, label="A* repetitions")
     plt.xlabel("Input size (number of nodes in the Graph")
