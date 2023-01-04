@@ -1,5 +1,5 @@
 """
-@description: This file contains the MinHeap class. It is used for the Dijkstra's algorithm.
+@description: This file contains the MinHeap class. It is used for the dijkstra's algorithm.
 @authors: Mustafa Mert Tunali, Ahmet Yildiz, Kerem Kaya
 @instructor: Prof. Dr. Muhittin Gokmen
 @course: COMP 303 - Algorithm Analysis
@@ -9,7 +9,7 @@
 
 class MinHeap:
     """
-    This class implements the MinHeap data structure. It is used for the Dijkstra's algorithm.
+    This class implements the MinHeap data structure. It is used for the dijkstra's algorithm.
     It is implemented using the list data structure.
 
     @attributes:
@@ -121,7 +121,7 @@ class MinHeap:
 
     def decrease_key(self, node, new_distance):
         """
-        This function decreases the distance of the given node. It is used for the Dijkstra's algorithm.
+        This function decreases the distance of the given node. It is used for the dijkstra's algorithm.
         One of the main steps of the algorithm is to decrease the distance of the adjacent nodes of the current node.
 
         Args:

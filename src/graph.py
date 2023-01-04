@@ -20,14 +20,14 @@ from min_heap import MinHeap
 class Graph(MinHeap):
     """
     This class represents a graph data structure, with support for adding and accessing
-    nodes and edges, as well as performing Dijkstra and A* searches.
+    nodes and edges, as well as performing dijkstra and A* searches.
 
     @attributes:
         graph (dict): A dictionary mapping nodes to a list of their neighbors and the weights
             of their edges.
         node_coordinates (dict): A dictionary mapping nodes to their x and y coordinates.
         a_star_parents (dict): A dictionary used to store the parent nodes during A* search.
-        dijkstra_parents (dict): A dictionary used to store the parent nodes during Dijkstra search.
+        dijkstra_parents (dict): A dictionary used to store the parent nodes during dijkstra search.
     """
 
     def __init__(self):
@@ -166,7 +166,7 @@ class Graph(MinHeap):
         ]  # Return the list of neighbors of the given node
 
     def dijkstra(self, source: int, target: int, viz=False) -> Tuple[List[int], int]:
-        """Performs Dijkstra search on the graph. Returns the shortest path from the source.
+        """Performs dijkstra search on the graph. Returns the shortest path from the source.
         It uses a min heap to keep track of the distances to the nodes. It iterates over the
         nodes in the heap and updates the distances to the neighbors of the current node.
         Firstly, it checks if the current node is the target node. If it is, it returns the
@@ -377,10 +377,10 @@ if __name__ == "__main__":
     g.add_edge(1, 4, 2)
 
     print(g)
-    djikstra_distance = g.dijkstra(
+    dijkstra_distance = g.dijkstra(
         1, 4
     )  # find the shortest path between node 1 and node 4
-    print(f"Dijkstra distance: {djikstra_distance}")  # print the distance
+    print(f"dijkstra distance: {dijkstra_distance}")  # print the distance
 
     a_star_distance = g.a_star(1, 4)  # find the shortest path between node 1 and node 4
     print(f"A* distance: {a_star_distance}")  # print the distance

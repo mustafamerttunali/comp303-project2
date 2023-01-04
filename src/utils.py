@@ -205,7 +205,7 @@ def visualize_shortest_path(g, nodes, edges, source, target, algorithm):
 
 def compare_algorithms(g1, g2, source, target):
     """
-    This function compares the time complexity of Dijkstra's algorithm and A* algorithm.
+    This function compares the time complexity of dijkstra's algorithm and A* algorithm.
 
     Args:
         g1 (Graph): Graph object

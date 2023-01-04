@@ -65,8 +65,8 @@ else:
     a_star_times = []
     a_star_repetitions = []
     a_star_total_cost = []
-    djikstra_times = []
-    djikstra_repetitions = []
+    dijkstra_times = []
+    dijkstra_repetitions = []
     dijkstra_total_cost = []
     for N in N_s:
         print(f"Experiment is starting by creating Graph  with {N} nodes...", end="")
@@ -80,23 +80,23 @@ else:
         results = compare_algorithms(
             g1, g2, source, target
         )  # Compare the results of the algorithms
-        djikstra_time, a_star_time = (
+        dijkstra_time, a_star_time = (
             results["dijkstra"]["time"],
             results["a_star"]["time"],
         )  # Get the running times of the algorithms
 
-        djikstra_times.append(
-            djikstra_time
+        dijkstra_times.append(
+            dijkstra_time
         )  # Append the running times of the algorithms
         a_star_times.append(a_star_time)  # Append the running times of the algorithms
 
-        djikstra_repetition, a_star_repetition = (
+        dijkstra_repetition, a_star_repetition = (
             results["dijkstra"]["repetition"],
             results["a_star"]["repetition"],
         )  # Get the number of repetitions of the algorithms
 
-        djikstra_repetitions.append(
-            djikstra_repetition
+        dijkstra_repetitions.append(
+            dijkstra_repetition
         )  # Append the number of repetitions of the algorithms
         a_star_repetitions.append(
             a_star_repetition
@@ -113,7 +113,7 @@ else:
         "Running time of Dijkstra and A* algorithms"
     )  # Plot the running times of the algorithms
     plt.plot(
-        N_s, djikstra_times, label="Dijkstra"
+        N_s, dijkstra_times, label="Dijkstra"
     )  # Plot the running times of the algorithms
     plt.plot(N_s, a_star_times, label="A*")  # Plot the running times of the algorithms
     plt.xlabel("Input size (number of nodes in the Graph")  # Set the x label
@@ -121,12 +121,12 @@ else:
     plt.legend()  # Show the legend
     plt.show()  # Show the plot
 
-    # Djakstra counters
+    # dijkstra counters
     plt.title(
         "Repetitions by Dijkstra and A*"
     )  # Plot the number of repetitions of the algorithms
     plt.plot(
-        N_s, djikstra_repetitions, label="Dijkstra repetitions"
+        N_s, dijkstra_repetitions, label="Dijkstra repetitions"
     )  # Plot the number of repetitions of the algorithms
     plt.plot(
         N_s, a_star_repetitions, label="A* repetitions"
@@ -165,7 +165,7 @@ else:
 shortest_path_algorithms = {0: g.dijkstra, 1: g.a_star}  # Algorithms to compare
 while True:
     # Get the source and target nodes from the user
-    algorithm = int(input("Select the algorithm [0 for djkstra, 1 for A*, ]: "))
+    algorithm = int(input("Select the algorithm [0 for dijkstra, 1 for A*, ]: "))
     try:
         # Get the source and target nodes from the user
         source, target = (
