@@ -165,7 +165,7 @@ class Graph(MinHeap):
             neighbor for neighbor, _ in self.graph[node]
         ]  # Return the list of neighbors of the given node
 
-    def dijkstra(self, source: int, target: int) -> Tuple[List[int], int]:
+    def dijkstra(self, source: int, target: int, viz=False) -> Tuple[List[int], int]:
         """Performs Dijkstra search on the graph. Returns the shortest path from the source.
         It uses a min heap to keep track of the distances to the nodes. It iterates over the
         nodes in the heap and updates the distances to the neighbors of the current node.
@@ -178,7 +178,7 @@ class Graph(MinHeap):
         Args:
             source (int): id of the source node
             target (int): id of the target node
-
+            viz (bool): whether to visualize the search
         Returns:
             metrics (dict): dictionary containing the number of visited nodes, the number of
                 repetitions, the path and the distance of the shortest path from the source
@@ -189,7 +189,9 @@ class Graph(MinHeap):
             node: float("inf") for node in self.graph.keys()
         }  # initialize the distance mapping
         distances[source] = 0  # set the distance of the source node to 0
-        self.dijkstra_parents = {source: source}  # initialize the parent mapping
+        self.dijkstra_parents = (
+            {source: source} if viz == False else {source: None}
+        )  # initialize the parent mapping
 
         self.heap = []  # initialize the heap
         self.push((0, source))  # (distance, node)
@@ -258,7 +260,9 @@ class Graph(MinHeap):
             target - node
         )  # return the absolute value of the difference between the indices
 
-    def a_star(self, source: int, target: int) -> Tuple[List[int], int]:
+    def a_star(
+        self, source: int, target: int, viz: bool = False
+    ) -> Tuple[List[int], int]:
         """Performs A* search on the graph. Returns the shortest path from the source.
         It uses a list to keep track of the distances to the nodes. It iterates over the
         nodes in the list and updates the distances to the neighbors of the current node.
@@ -273,7 +277,7 @@ class Graph(MinHeap):
         Args:
             source (int): id of the source node
             target (int): id of the target node
-
+            viz (bool): whether to visualize the search
         Returns:
             metrics (dict): dictionary containing the number of visited nodes, the number of
                 repetitions, the path and the distance of the shortest path from the source
@@ -283,7 +287,9 @@ class Graph(MinHeap):
             node: float("inf") for node in self.graph.keys()
         }  # initialize the distance mapping
         distances[source] = 0  # set the distance of the source node to 0
-        self.a_star_parents = {source: source}  # initialize the parent mapping
+        self.a_star_parents = (
+            {source: source} if viz == False else {source: None}
+        )  # initialize the parent mapping
 
         open_set = set([source])  # initialize the open set with the source node
         closed_set = set()  # initialize the closed set
