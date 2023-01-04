@@ -58,7 +58,7 @@ class Graph(MinHeap):
     def dijkstra(self, source: int, target: int) -> Tuple[List[int], int]:
         distances = {node: float("inf") for node in self.graph.keys()}
         distances[source] = 0
-        self.dijkstra_parents = {source: None}  # initialize the parent mapping
+        self.dijkstra_parents = {source: source}  # initialize the parent mapping
 
         self.heap = []
         self.push((0, source))  # (distance, node)
@@ -114,7 +114,7 @@ class Graph(MinHeap):
     def a_star(self, source: int, target: int) -> Tuple[List[int], int]:
         distances = {node: float("inf") for node in self.graph.keys()}
         distances[source] = 0
-        self.a_star_parents = {source: None}  # initialize the parent mapping
+        self.a_star_parents = {source: source}
 
         open_set = set([source])
         closed_set = set()
@@ -129,9 +129,11 @@ class Graph(MinHeap):
 
             if node == target:
                 path = [target]
+
                 while path[-1] != source:
                     path.append(self.a_star_parents[path[-1]])
                 path.reverse()
+
                 metrics["repetition"] = repetition
                 metrics["visited"] = len(path)
                 metrics["path"] = path
